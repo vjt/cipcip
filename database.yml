@@ -1,0 +1,11 @@
+authentication:
+  adapter: mysql
+  username: root
+  password: suxsux
+  database: postfix
+
+data:
+  adapter: mysql
+  username: root
+  password: suxsux
+  database: cipcip
