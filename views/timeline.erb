@@ -1,0 +1,18 @@
+<% title 'Timeline' %>
+
+  <h1>Hello, <%= @user.name %>!</h1>
+
+  <h2>What are you doing?</h2>
+
+  <form action="/tweet" method="POST">
+    <input type="text" name="body" />
+    <input type="submit" value="tweet" />
+  </form>
+
+  <ul>
+  <% for tweet in @tweets do %>
+    <li><strong><%= tweet.user.name %></strong>&nbsp;<%= tweet.body %>&nbsp;<em><%= tweet.created_at %></em></li>
+  <% end %>
+  </ul>
+
+  <p><a href="/logout">logout</a></p>

@@ -1,38 +1,20 @@
 require 'rubygems'
 require 'sinatra'
+require 'sinatra/content_for'
 #require 'ruby-debug'
 
 configure do
   load 'lib/boot.rb'
+  require 'lib/models'
+end
+
+helpers do
+  def title(string)
+    content_for(:title) { string }
+  end
 end
 
 enable :sessions
-
-class User < ActiveRecord::Base
-  establish_connection $db['authentication']
-  set_table_name 'mailbox'
-  set_primary_key 'username'
-
-  has_many :tweets, :foreign_key => :user
-
-  acts_as_authentic do |c|
-    c.logged_in_timeout 1.day
-  end
-
-  def valid_password?(password)
-    Authlogic::CryptoProviders::MD5Crypt.matches?(self.password, password)
-  end
-end
-
-class UserSession < Authlogic::Session::Base
-end
-
-class Tweet < ActiveRecord::Base
-  belongs_to :user, :foreign_key => :user
-  validates_presence_of :user
-  validates_presence_of :body
-  named_scope :by_date, :order => 'tweets.created_at DESC'
-end
 
 get '/' do
   session = UserSession.find
@@ -58,11 +40,23 @@ get '/logout' do
   redirect '/'
 end
 
+post '/tweet' do
+  session = UserSession.find
+  unless session
+    redirect '/'
+  else
+    Tweet.create(:user => session.user, :body => params[:body])
+    redirect '/timeline'
+  end
+end
+
 get '/timeline' do
   session = UserSession.find
   unless session
     redirect '/'
   else
-    "Hello, #{session.user.name}"
+    @tweets = Tweet.by_date.find(:all, :limit => 20)
+    @user = session.user
+    erb :timeline
   end
 end
