@@ -1,0 +1,15 @@
+h2. A minimalist twitter clone written with Sinatra and Authlogic
+
+This project fullfills the need of a corporate twitter web application for internal communication.
+
+Due to our specific needs, it uses two different databases for authentication and for data, because we want to use the mail credentials to log in, and those are stored into the `postfix` database.
+
+I wrote the Sinatra adapter for authlogic and a Crypto provider that uses facets' implementation of MD5Crypt, because passwords are stored this way on our setup.
+
+There is currently absolutely no styling or layout, just the bare application.
+
+Feel free to fork the repository and use on your corporate network, thanks to authlogic you should be able to customize it easily.
+
+Config.ru for mod_passenger included.
+
+Have fun!
